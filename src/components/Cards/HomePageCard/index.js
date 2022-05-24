@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
-import getPokemonTypeColor from '../../../functions/getPokemonTypeColor';
+import { PokemonTypes } from '../../PokemonTypes';
 
 export function HomePageCard({ pokemon, lastPokemonElementRef = null }) {
   const { name, sprites, types } = pokemon;
@@ -20,20 +21,9 @@ export function HomePageCard({ pokemon, lastPokemonElementRef = null }) {
         {name}
       </h2>
 
-      <div>
+      <div className='transform -translate-y-14'>
         {types.map((type) => {
-          const { type: pokeType } = type;
-
-          const typeColor = getPokemonTypeColor(pokeType.name);
-
-          return (
-            <span
-              key={pokeType.name}
-              className={`${typeColor} mr-2 transform -translate-y-14 inline-block uppercase font-bold text-sm`}
-            >
-              {pokeType.name}
-            </span>
-          );
+          return <PokemonTypes key={uuidv4()} pokeType={type} />;
         })}
       </div>
 

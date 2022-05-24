@@ -1,5 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 
+import { v4 as uuidv4 } from 'uuid';
+
 import { Header } from '../components/Header';
 import { Loading } from '../components/Loading';
 
@@ -50,14 +52,14 @@ export function Home() {
             if (pokemons.length === index + 1) {
               return (
                 <HomePageCard
-                  key={poke.id}
+                  key={uuidv4()}
                   pokemon={poke}
                   lastPokemonElementRef={lastPokemonElementRef}
                 />
               );
             }
 
-            return <HomePageCard key={poke.id} pokemon={poke} />;
+            return <HomePageCard key={uuidv4()} pokemon={poke} />;
           })}
         </div>
 

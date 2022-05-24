@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import api from '../services/api';
 
+// TODO: Adicionar try catch
 export default function useGetPokemon(pageNumber) {
   const [loading, setLoading] = useState(true);
   const [pokemons, setPokemons] = useState([]);
@@ -9,6 +10,8 @@ export default function useGetPokemon(pageNumber) {
 
   useEffect(() => {
     setLoading(true);
+
+    let ignore = false;
 
     async function getPokemonData(results) {
       const pokeList = [];
@@ -23,17 +26,22 @@ export default function useGetPokemon(pageNumber) {
     }
 
     async function getPokemonList() {
-      const response = await api.get(`pokemon/?limit=30&offset=${pageNumber}`);
+      const response = await api.get(`pokemon/?limit=20&offset=${pageNumber}`);
 
-      setHasMore(response.data.results.length > 0);
+      if (!ignore) {
+        const pokemonData = await getPokemonData(response.data.results);
 
-      const pokemonData = await getPokemonData(response.data.results);
-
-      setPokemons((prevPokemons) => [...prevPokemons, ...pokemonData]);
-      setLoading(false);
+        setHasMore(response.data.results.length > 0);
+        setPokemons((prevPokemons) => [...prevPokemons, ...pokemonData]);
+        setLoading(false);
+      }
     }
 
     getPokemonList();
+
+    return () => {
+      ignore = true;
+    };
   }, [pageNumber]);
 
   return {
