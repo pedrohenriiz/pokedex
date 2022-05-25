@@ -3,6 +3,8 @@ import { Detail } from './pages/Detail';
 
 import { Home } from './pages/Home';
 
+// TODO Adicionar o toast
+// TODO: Adicionar o detail responsivo
 function App() {
   return (
     <Router>

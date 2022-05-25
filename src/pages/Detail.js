@@ -16,7 +16,6 @@ export function Detail() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // TODO: Adicionar o toast
     async function getPokemonDetail() {
       try {
         setIsLoading(true);
