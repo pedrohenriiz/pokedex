@@ -18,7 +18,6 @@ export function Detail() {
   useEffect(() => {
     async function getPokemonDetail() {
       try {
-        setIsLoading(true);
         const response = await api.get(`pokemon/${id}`);
         setPokemonData(response.data);
         setIsLoading(false);
@@ -35,7 +34,9 @@ export function Detail() {
       <div className='container mx-auto px-4 flex flex-col items-center'>
         <Header />
 
-        {!isLoading ? (
+        {isLoading && <Loading />}
+
+        {!isLoading && (
           <>
             <PokemonDetailImage
               name={pokemonData.name}
@@ -51,8 +52,6 @@ export function Detail() {
 
             <DetailStats stats={pokemonData.stats} />
           </>
-        ) : (
-          <Loading />
         )}
       </div>
     </div>
