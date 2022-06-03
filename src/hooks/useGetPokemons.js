@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 
 import api from '../services/api';
 
-// TODO: Adicionar try catch
-export default function useGetPokemon(pageNumber) {
+export default function useGetPokemon(pageNumber, setReturned) {
   const [loading, setLoading] = useState(true);
   const [pokemons, setPokemons] = useState([]);
   const [hasMore, setHasMore] = useState(false);
@@ -26,14 +25,48 @@ export default function useGetPokemon(pageNumber) {
     }
 
     async function getPokemonList() {
-      const response = await api.get(`pokemon/?limit=20&offset=${pageNumber}`);
+      let route;
+      let isRetorned = false;
+
+      if (
+        localStorage.getItem('pageHeight') &&
+        localStorage.getItem('pageNumber')
+      ) {
+        route = `pokemon/?limit=${Number(
+          localStorage.getItem('pageNumber')
+        )}&offset=0`;
+
+        isRetorned = true;
+      } else {
+        route = `pokemon/?limit=24&offset=${pageNumber}`;
+      }
+
+      const response = await api.get(route);
 
       if (!ignore) {
         const pokemonData = await getPokemonData(response.data.results);
 
         setHasMore(response.data.results.length > 0);
-        setPokemons((prevPokemons) => [...prevPokemons, ...pokemonData]);
+        setPokemons((prevPokemons) => {
+          if (
+            localStorage.getItem('pageHeight') &&
+            localStorage.getItem('pageNumber') &&
+            isRetorned
+          ) {
+            const pokemons = [...pokemonData];
+
+            return pokemons;
+          }
+
+          const pokemons = [...prevPokemons, ...pokemonData];
+
+          return pokemons;
+        });
         setLoading(false);
+
+        if (isRetorned) {
+          setReturned(true);
+        }
       }
     }
 
@@ -42,7 +75,7 @@ export default function useGetPokemon(pageNumber) {
     return () => {
       ignore = true;
     };
-  }, [pageNumber]);
+  }, [pageNumber, setReturned]);
 
   return {
     loading,

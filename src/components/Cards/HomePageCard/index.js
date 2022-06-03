@@ -3,7 +3,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { PokemonTypes } from '../../PokemonTypes';
 
-export function HomePageCard({ pokemon, lastPokemonElementRef = null }) {
+export function HomePageCard({
+  pokemon,
+  lastPokemonElementRef = null,
+  pageNumber,
+}) {
   const { name, sprites, types } = pokemon;
 
   return (
@@ -28,7 +32,17 @@ export function HomePageCard({ pokemon, lastPokemonElementRef = null }) {
       </div>
 
       <span className='text-gray-600 font-bold uppercase no-underline inline-block transform -translate-y-6'>
-        <Link to={`/${pokemon.id}`}>Details</Link>
+        <Link
+          to={`/${pokemon.id}`}
+          onClick={() => {
+            const pageHeight = window.scrollY;
+
+            localStorage.setItem('pageHeight', pageHeight);
+            localStorage.setItem('pageNumber', pageNumber);
+          }}
+        >
+          Details
+        </Link>
       </span>
     </div>
   );
